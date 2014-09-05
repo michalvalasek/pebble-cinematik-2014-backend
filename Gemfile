@@ -26,6 +26,11 @@ gem 'spring',    group: :development
 
 gem 'wombat'
 
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
+end
+
 group :development, :test do
   gem 'mysql2' # Use mysql as the database for Active Record
 end
