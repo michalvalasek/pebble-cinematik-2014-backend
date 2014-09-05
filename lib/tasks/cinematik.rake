@@ -11,9 +11,13 @@ namespace :cinematik do
 
       program 'css=h2.grid-tit a', :follow do
         name 'css=div.grid-text h1'
+        original_name 'xpath=//div[@class="movie_meta"][1]//h2[1]'
         date 'xpath=//div[@class="projekcia"][1]//ul[1]//li[1]'
         time 'xpath=//div[@class="projekcia"][1]//ul[1]//li[2]'
         place 'xpath=//div[@class="projekcia"][1]//ul[1]//li[3]'
+        section 'xpath=//div[@class="sekcia"][1]//strong[1]/a[1]'
+        director 'xpath=//div[@class="movie_meta"][1]//p[2]//strong'
+        meta 'xpath=//div[@class="movie_meta"][1]//p[@class="gray"][1]'
       end
     end
 
@@ -24,8 +28,12 @@ namespace :cinematik do
     data['program'].each do |event|
       if event['date'] && event['time'] && event['place']
         Event.find_or_create_by(name: event['name']) do |e|
+          e.original_name = event['original_name']
           e.date = (event['date'].gsub!(/[^\d\.]/, '') + "2014 #{event['time']}").to_datetime
           e.place = event['place']
+          e.section = event['section']
+          e.director = event['director']
+          e.meta = event['meta']
         end
         puts "created event: #{event['name']}"
       end
