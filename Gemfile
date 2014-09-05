@@ -24,6 +24,8 @@ gem 'spring',    group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+gem 'wombat'
+
 group :development, :test do
   gem 'mysql2' # Use mysql as the database for Active Record
 end
