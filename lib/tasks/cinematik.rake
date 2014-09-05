@@ -2,7 +2,7 @@ namespace :cinematik do
 
   desc "Scrapes the events from Cinematik web and stores them in DB"
   task :scrape_events => :environment do
-    require 'Wombat'
+    require 'wombat'
 
     puts "Scraping the web for events..."
     data = Wombat.crawl do
