@@ -9,4 +9,8 @@ class EventsController < ApplicationController
     limit = params[:limit].to_i || 3
     @events = Event.where('date > ?',Time.now).order(:date).limit(limit)
   end
+
+  def show
+    @event = Event.find(params[:id])
+  end
 end
