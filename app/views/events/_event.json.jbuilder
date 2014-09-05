@@ -1,1 +1,1 @@
-json.(event, :name, :date, :place)
+json.(event, :name, :day, :time, :place)
