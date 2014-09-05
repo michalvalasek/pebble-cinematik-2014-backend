@@ -1,0 +1,1 @@
+json.(event, :name, :date, :place)
