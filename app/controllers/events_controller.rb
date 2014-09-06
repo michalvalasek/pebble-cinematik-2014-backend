@@ -8,6 +8,7 @@ class EventsController < ApplicationController
   def upcoming
     limit = params[:limit].to_i || 3
     @events = Event.where('date > ?',Time.now).order(:date).limit(limit)
+    @render_thumbnails = ! params[:thumbnails].blank?
   end
 
   def show
