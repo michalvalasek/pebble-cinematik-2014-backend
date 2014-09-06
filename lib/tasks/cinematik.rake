@@ -33,7 +33,7 @@ namespace :cinematik do
           e.place = event['place']
           e.section = event['section']
           e.director = event['director']
-          e.meta = event['meta']
+          e.meta = event['meta'].gsub(/[\t\n]/,'') if event['meta']
         end
         puts "created event: #{event['name']}"
       end
