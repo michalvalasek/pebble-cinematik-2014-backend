@@ -6,4 +6,4 @@ json.time event.time
 json.place I18n.transliterate(event.place)
 json.section I18n.transliterate(event.section) if event.section
 json.director I18n.transliterate(event.director) if event.director
-json.meta event.meta if event.meta
+json.meta I18n.transliterate(event.meta) if event.meta
