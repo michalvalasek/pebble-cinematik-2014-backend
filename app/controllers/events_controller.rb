@@ -9,7 +9,7 @@ class EventsController < ApplicationController
     limit = params[:limit] ? params[:limit].to_i : 3
 
     @events = Event.where('date > ?',Time.now).order(:date).limit(limit)
-    if place = self.get_real_place_name(params[:place])
+    if params[:place] && place = self.get_real_place_name(params[:place])
       @events = @events.where(place:place)
     end
 
