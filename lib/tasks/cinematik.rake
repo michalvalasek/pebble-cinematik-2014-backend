@@ -25,11 +25,12 @@ namespace :cinematik do
     ActiveRecord::Base.connection.execute("TRUNCATE TABLE events")
 
     puts "Storing the events in the DB..."
+    current_year = Date.today.year.to_s
     data['program'].each do |event|
       if event['date'] && event['time'] && event['place']
         Event.find_or_create_by(name: event['name']) do |e|
           e.original_name = event['original_name']
-          e.date = (event['date'].gsub!(/[^\d\.]/, '') + "2014 #{event['time']}").to_datetime
+          e.date = (event['date'].gsub!(/[^\d\.]/, '') + current_year + " #{event['time']}").to_datetime
           e.place = event['place']
           e.section = event['section']
           e.director = event['director']
