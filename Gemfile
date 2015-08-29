@@ -4,6 +4,8 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.5'
 
+gem 'pg'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
@@ -29,14 +31,13 @@ gem 'wombat'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
+  gem 'byebug'
 end
 
 group :development, :test do
-  gem 'mysql2' # Use mysql as the database for Active Record
 end
 
 group :production do
-  gem "pg" # Use postgresql as the database for Active Record
   gem "rails_12factor"
   gem "rails_stdout_logging"
 end
