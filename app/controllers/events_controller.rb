@@ -6,8 +6,13 @@ class EventsController < ApplicationController
   end
 
   def upcoming
-    limit = params[:limit].to_i || 3
+    limit = params[:limit] ? params[:limit].to_i : 3
+
     @events = Event.where('date > ?',Time.now).order(:date).limit(limit)
+    if place = self.get_real_place_name(params[:place])
+      @events = @events.where(place:place)
+    end
+
     @render_thumbnails = ! params[:thumbnails].blank?
   end
 
@@ -18,5 +23,24 @@ class EventsController < ApplicationController
   def next
     current_event = Event.find(params[:id])
     @event = Event.where('id > ?',current_event.id).order(:date).limit(1).first
+  end
+
+  def by_place
+    place = get_real_place_name(params[:place])
+    limit = params[:limit] ? params[:limit].to_i : 10
+    @events = Event.where(place: place).order(:date).limit(limit)
+  end
+
+  protected
+
+  def get_real_place_name(parametrized_name)
+    places = {
+      'fontana' => 'Fontána',
+      'dom-umenia' => 'Dom umenia',
+      'ziwell' => 'ŽiWell',
+      'kino-klub' => 'Kino Klub',
+      'amfiteater' => 'Amfiteáter'
+    }
+    place = places[parametrized_name]
   end
 end
