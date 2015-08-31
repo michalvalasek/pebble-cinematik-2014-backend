@@ -27,6 +27,7 @@ gem 'spring',    group: :development
 # gem 'debugger', group: [:development, :test]
 
 gem 'wombat'
+gem 'pebble_timeline'
 
 group :development do
   gem 'better_errors'

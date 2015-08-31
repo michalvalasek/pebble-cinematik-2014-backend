@@ -40,4 +40,76 @@ namespace :cinematik do
       end
     end
   end
+
+  desc "Pushes Pebble Timeline pins to the Pebble API"
+  task :push_pins => :environment do
+    require 'pebble_timeline'
+    PebbleTimeline.config.api_key = ENV['PEBBLE_API_KEY']
+    pins = PebbleTimeline::Pins.new
+
+    Event.upcoming.each do |event|
+      pin = {
+        id: "cinematik-#{event.id}",
+        time: event.date.to_time.iso8601,
+        topics: 'cinematik',
+        layout: {
+          type: 'genericPin',
+          title: event.name,
+          shortTitle: event.name,
+          subtitle: event.place,
+          tinyIcon: 'system://images/MOVIE_EVENT',
+          headings: ["Original name","Section","Director","Meta"],
+          paragraphs: [
+            event.original_name,
+            event.section,
+            event.director,
+            event.meta
+          ]
+        }
+      }
+
+      duration = event.meta.scan(/(\d+)\s?min/)
+      if duration.size>0
+        pin[:duration] = duration.first.first.to_i
+      end
+
+      print "Pushing '#{event.name}'... "
+      puts pins.create(pin)
+    end
+  end
+
+  task :push_test_pin => :environment do
+    require 'pebble_timeline'
+    PebbleTimeline.config.api_key = ENV['PEBBLE_API_KEY']
+    pins = PebbleTimeline::Pins.new
+
+    event = Event.all.last
+    pin = {
+      id: "cinematik-#{event.id}",
+      time: (Time.now + 4.hour).iso8601,
+      topics: 'cinematik',
+      layout: {
+        type: 'genericPin',
+        title: event.name,
+        shortTitle: event.name,
+        subtitle: event.place,
+        tinyIcon: 'system://images/MOVIE_EVENT',
+        headings: ["Original name","Section","Director","Meta"],
+        paragraphs: [
+          event.original_name,
+          event.section,
+          event.director,
+          event.meta
+        ]
+      }
+    }
+
+    duration = event.meta.scan(/(\d+)\s?min/)
+    if duration.size>0
+      pin[:duration] = duration.first.first.to_i
+    end
+
+    print "Pushing testing pin: '#{event.name}' @ #{pin[:time]}... "
+    puts pins.create(pin)
+  end
 end
