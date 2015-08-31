@@ -1,4 +1,4 @@
 json.id event.id
-json.name I18n.transliterate(event.name)
+json.name event.name
 json.time event.time
-json.place I18n.transliterate(event.place)
+json.place event.place
