@@ -36,7 +36,7 @@ namespace :cinematik do
           e.place = event['place']
           e.section = event['section']
           e.director = event['director']
-          e.meta = event['meta'].gsub(/[\t\n]/,'') if event['meta']
+          e.meta = event['meta'].gsub(/[\t\n]/,'').gsub(/, Žáner:\z/,'') if event['meta']
           e.people = event['people'].gsub(/<\/?span(\sclass="gray")?>/,'').gsub(/<\/?strong>/, '').gsub(/\s+/,' ')
           e.description = event['description']
         end
@@ -63,13 +63,16 @@ namespace :cinematik do
             shortTitle: event.name,
             subtitle: event.place,
             tinyIcon: 'system://images/MOVIE_EVENT',
-            headings: ["Original name","Section","Director","Meta"],
+            headings: ["Pôvodné meno","Meta","Sekcia","Tvorcovia","Popis"],
             paragraphs: [
               event.original_name,
+              event.meta,
               event.section,
-              event.director,
-              event.meta
-            ]
+              "Réžia: #{event.director} | #{event.people}",
+              event.description
+            ],
+            secondaryColor: 'white',
+            backgroundColor: 'vividcerulean'
           }
         }
 
@@ -95,9 +98,16 @@ namespace :cinematik do
     end
 
     task :push_test_pin => :environment do
+      pin_id = "cinematik-test"
+
+      # first delete the old one
+      print "Deleting old version of the pin... "
+      puts @pins.delete(pin_id)
+
+      # now create a new one instead
       event = Event.all.last
       pin = {
-        id: "cinematik-#{event.id}",
+        id: pin_id,
         time: (Time.now + 4.hour).iso8601,
         topics: 'cinematik',
         layout: {
@@ -106,21 +116,26 @@ namespace :cinematik do
           shortTitle: event.name,
           subtitle: event.place,
           tinyIcon: 'system://images/MOVIE_EVENT',
-          headings: ["Original name","Section","Director","Meta"],
+          headings: ["Pôvodné meno","Meta","Sekcia","Tvorcovia","Popis"],
           paragraphs: [
             event.original_name,
+            event.meta,
             event.section,
-            event.director,
-            event.meta
-          ]
+            "Réžia: #{event.director} | #{event.people}",
+            event.description
+          ],
+          secondaryColor: 'white',
+          backgroundColor: 'vividcerulean'
         }
       }
 
+      # add duration if possible
       duration = event.meta.scan(/(\d+)\s?min/)
       if duration.size>0
         pin[:duration] = duration.first.first.to_i
       end
 
+      # push pin to the Pebble Timeline API
       print "Pushing testing pin: '#{event.name}' @ #{pin[:time]}... "
       puts @pins.create(pin)
     end
